@@ -2,12 +2,17 @@ name: Manual Trigger Workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      should_succeed:
+        description: 'Should the unit tests succeed?'
+        required: true
+        type: boolean
 
 jobs:
   run-unit-tests:
     uses: ./.github/workflows/unit-tests.yml
     with:
-      should_succeed: true
+      should_succeed: ${{ github.event.inputs.should_succeed }}
 
   second-job:
     needs: run-unit-tests
