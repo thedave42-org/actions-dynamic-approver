@@ -14,12 +14,36 @@ jobs:
     with:
       should_succeed: ${{ contains(github.event.inputs.should_succeed, 'true') }}
 
-  second-job:
+  check-for-review:
+    permissions:
+      contents: write
     needs: run-unit-tests
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Run a one-line script
         run: echo "${{ needs.run-unit-tests.result }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create or update environment
+        run: |
+          if [ "${{ needs.run-unit-tests.result }}" != "success" ]; then
+            curl -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/environments/staging \
+              -d '{
+                "reviewers": ["thedave42"]
+              }'
+          else
+            curl -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/environments/staging \
+              -d '{
+                "reviewers": []
+              }'
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}Y
 
   
