@@ -1,0 +1,20 @@
+name: Manual Trigger Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-unit-tests:
+    uses: ./.github/workflows/unit-tests.yml@main
+    with:
+      should_succeed: true
+
+  second-job:
+    needs: run-unit-tests
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Run a one-line script
+        run: echo "Hello, world!"
+
+  
