@@ -46,4 +46,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RESULT_CHECK_TOKEN }}Y
 
-  
+  deploy-to-staging:
+    needs: [run-unit-tests, check-for-review]
+    environment: staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging
+        run: echo "Deployed" >> $GITHUB_STEP_SUMMARY
+
+
+ 
