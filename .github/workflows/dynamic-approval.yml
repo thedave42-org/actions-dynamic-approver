@@ -49,6 +49,7 @@ jobs:
   deploy-to-staging:
     needs: [check-for-review]
     environment: staging
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to staging
