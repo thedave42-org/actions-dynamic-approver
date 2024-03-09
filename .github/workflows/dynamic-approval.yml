@@ -20,6 +20,6 @@ jobs:
     if: always()
     steps:
       - name: Run a one-line script
-        run: echo "Hello, world!"
+        run: echo "${{ needs.run-unit-tests.result }}" >> $GITHUB_STEP_SUMMARY
 
   
