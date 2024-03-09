@@ -12,7 +12,7 @@ jobs:
   run-unit-tests:
     uses: ./.github/workflows/unit-tests.yml
     with:
-      should_succeed: ${{ github.event.inputs.should_succeed }}
+      should_succeed: ${{ contains(github.event.inputs.should_succeed, 'true') }}
 
   second-job:
     needs: run-unit-tests
