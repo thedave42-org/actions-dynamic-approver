@@ -23,6 +23,7 @@ jobs:
       - name: Run a one-line script
         run: echo "${{ needs.run-unit-tests.result }}" >> $GITHUB_STEP_SUMMARY
 
+        # can find out ids of users who can be added as reviewers with gh api repos/${{ github.repository }}/collaborators
       - name: Create or update environment
         run: |
           if [ "${{ needs.run-unit-tests.result }}" != "success" ]; then
@@ -31,7 +32,7 @@ jobs:
               -H "Accept: application/vnd.github.v3+json" \
               https://api.github.com/repos/${{ github.repository }}/environments/staging \
               -d '{
-                "reviewers": ["thedave42"]
+                "reviewers": {["type": user, "id": 50186003]}
               }'
           else
             curl -X PUT \
