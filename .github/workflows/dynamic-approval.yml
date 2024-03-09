@@ -15,7 +15,6 @@ jobs:
       should_succeed: ${{ contains(github.event.inputs.should_succeed, 'true') }}
 
   check-for-review:
-    permissions: write-all
     needs: run-unit-tests
     runs-on: ubuntu-latest
     if: always()
@@ -27,7 +26,7 @@ jobs:
         run: |
           if [ "${{ needs.run-unit-tests.result }}" != "success" ]; then
             curl -X PUT \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Authorization: token ${{ secrets.RESULT_CHECK_TOKEN }}" \
               -H "Accept: application/vnd.github.v3+json" \
               https://api.github.com/repos/${{ github.repository }}/environments/staging \
               -d '{
@@ -35,7 +34,7 @@ jobs:
               }'
           else
             curl -X PUT \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Authorization: token ${{ secrets.RESULT_CHECK_TOKEN }}" \
               -H "Accept: application/vnd.github.v3+json" \
               https://api.github.com/repos/${{ github.repository }}/environments/staging \
               -d '{
@@ -43,6 +42,6 @@ jobs:
               }'
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}Y
+          GITHUB_TOKEN: ${{ secrets.RESULT_CHECK_TOKEN }}
 
   
